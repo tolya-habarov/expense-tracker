@@ -14,7 +14,9 @@
         <div class="image">
           <img src="/static/assets/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
-        <div class="info d-flex"> <a href="#" class="d-block">User Logout</a>
+        <div class="info text-center">
+          {{user.username}} 
+          <a href="{% url 'logout' %}" class="text-center">Logout</a>
         </div>
       </div>
     </ul>
