@@ -59,7 +59,7 @@ class Transaction(StrMixin, models.Model):
         TRANSFER = 3
 
     name = models.CharField(max_length=100, db_index=True)
-    datetime = models.DateTimeField()
+    date = models.DateField()
     notes = models.TextField(blank=True)
     account = models.ForeignKey(
         Account,

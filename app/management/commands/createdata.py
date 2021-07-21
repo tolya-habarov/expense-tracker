@@ -94,15 +94,15 @@ class Command(BaseCommand):
         transactions, count = [], 15
         for i in range(count):
             if i < count / 2:
-                datetime = self.random_date(FIRST_DATE, SECOND_DATE)
+                date = self.random_date(FIRST_DATE, SECOND_DATE)
             else:
-                datetime = self.random_date(SECOND_DATE, END_DATE)
+                date = self.random_date(SECOND_DATE, END_DATE)
 
             transactions.append(
                 models.Transaction(
                     id=i,
                     name=f'Transaction{i+1}',
-                    datetime=datetime,
+                    date=date,
                     notes=NOTES,
                     account=random.choice(accounts),
                     transaction_type=random.choice(models.Transaction.Type.values),
