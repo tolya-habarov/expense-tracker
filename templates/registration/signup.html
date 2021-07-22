@@ -1,4 +1,5 @@
 {% extends 'base-fullscreen.html' %}
+{% load widget_tweaks %}
 
 {% block title %} Sign Up {% endblock %}
 
@@ -35,11 +36,9 @@
         </p>
 
         <form role="form" method="post" action="">
-
           {% csrf_token %}
-
           <div class="input-group mb-3">
-            {{ form.username }}
+            {% render_field form.username class="form-control" placeholder="Username" %}
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-user"></span>
@@ -49,7 +48,7 @@
           <span class="text-error">{{ form.username.errors }}</span>
 
           <div class="input-group mb-3">
-            {{ form.email }}
+            {% render_field form.email class="form-control" placeholder="Email" %}
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-envelope"></span>
@@ -59,7 +58,7 @@
           <span class="text-error">{{ form.email.errors }}</span>
 
           <div class="input-group mb-3">
-            {{ form.password1 }}
+            {% render_field form.password1 class="form-control" placeholder="Password" %}
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-lock"></span>
@@ -69,7 +68,7 @@
           <span class="text-error">{{ form.password1.errors }}</span>
 
           <div class="input-group mb-3">
-            {{ form.password2 }}
+            {% render_field form.password2 class="form-control" placeholder="Password" %}
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-lock"></span>

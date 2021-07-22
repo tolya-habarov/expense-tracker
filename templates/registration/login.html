@@ -1,4 +1,5 @@
 {% extends 'base-fullscreen.html' %}
+{% load widget_tweaks %}
 
 {% block title %} Login {% endblock %} 
 
@@ -39,11 +40,9 @@
         </p>
 
         <form method="post" action="{% url 'login' %}">
-
           {% csrf_token %}
-
           <div class="input-group mb-3">
-            {{ form.username }}
+            {% render_field form.username class="form-control" placeholder="Username" %}
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-envelope"></span>
@@ -51,7 +50,7 @@
             </div>
           </div>
           <div class="input-group mb-3">
-            {{ form.password }}
+            {% render_field form.password class="form-control" placeholder="Password" %}
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-lock"></span>
