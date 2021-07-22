@@ -22,7 +22,6 @@
 
 {% block content %}
 
-  <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
 
     <!-- Main content -->
@@ -32,11 +31,36 @@
           <div class="col-12">
 
             <div class="card">
+              <!-- Header -->
               <div class="card-header">
-                <h3 class="card-title">Transactions by month</h3>
-                <a href="{% url 'add_transaction' %}">
-                  <button class="btn btn-primary float-right">Add</button>
-                </a>
+                <div class="row">
+                  <a href="{% url 'add_transaction' %}">
+                    <button class="btn btn-primary">Add</button>
+                  </a>
+                  <!-- Pagination -->
+                  <ul class="pagination ml-auto">
+                    {% if previous_month %}
+                      <li class="page-item">
+                        <a class="page-link" href="{% url 'month_transactions' previous_month.year previous_month.month %}" aria-label="Previous">
+                          <span aria-hidden="true">&laquo;</span>
+                          <span>{{ previous_month|date:"F Y" }}</span>
+                        </a>
+                      </li>
+                    {% endif %}
+                    <li class="page-item active">
+                      <a class="page-link" href="#">{{ month|date:"F Y" }}<span class="sr-only">(current)</span></a>
+                    </li>
+                    {% if next_month %}
+                      <li class="page-item">
+                        <a class="page-link" href="{% url 'month_transactions' next_month.year next_month.month %}" aria-label="Next">
+                          <span>{{ next_month|date:"F Y" }}</span>
+                          <span aria-hidden="true">&raquo;</span>
+                        </a>
+                      </li>
+                    {% endif %}
+                  </ul>
+                  <!-- /.pagination-->
+                </div>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
@@ -118,7 +142,7 @@
 
       $('#transactions').on('click', 'tbody > tr', function ()
       {
-        document.location.href = "{% url 'transactions' %}" + $(this)[0].id
+        document.location.href = "{% url 'transactions' %}" + "edit/" + $(this)[0].id
       });
     });
   </script>

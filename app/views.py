@@ -1,5 +1,12 @@
-from typing import Optional
+import calendar
+from pytz import UTC
+import datetime as dt
+from typing import Any, Optional
+
+from django.utils import timezone
 from django.views.generic import ListView
+from django.views.generic.dates import MonthArchiveView
+from django.views.generic.base import RedirectView
 from django.views.generic.edit import CreateView, UpdateView
 from django.db.models.query import QuerySet
 from django.http import HttpRequest, HttpResponse
@@ -17,9 +24,19 @@ def index(request: HttpRequest) -> HttpResponse:
     return render(request, 'page-blank.html')
 
 
-class TransactionsView(LoginRequiredMixin, ListView):
+class CurrentDateTransactionsView(LoginRequiredMixin, RedirectView):
+    pattern_name = 'month_transactions'
+
+    def get_redirect_url(self, *args: Any, **kwargs: Any) -> Optional[str]:
+        now = timezone.now()
+        return super().get_redirect_url(*(args + (now.year, now.month)), **kwargs)
+
+
+class TransactionsView(LoginRequiredMixin, MonthArchiveView):
     template_name = 'transactions/view.html'
     context_object_name = 'transactions'
+    date_field = 'date'
+    month_format= '%m'
 
     def get_queryset(self) -> QuerySet[models.Transaction]:
         return models.Transaction.objects.filter(account__user=self.request.user)
