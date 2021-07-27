@@ -40,9 +40,10 @@ PAYEES = [
     'Burger King',
 ]
 
-FIRST_DATE = dt.datetime(2021, 1, 1).replace(tzinfo=UTC)
-SECOND_DATE = dt.datetime(2021, 2, 1).replace(tzinfo=UTC)
-END_DATE = dt.datetime(2021, 3, 1).replace(tzinfo=UTC)
+_currend_date = dt.datetime.today().replace(day=1, tzinfo=UTC)
+FIRST_DATE = _currend_date.replace(month=_currend_date.month - 1)
+SECOND_DATE = _currend_date
+END_DATE = _currend_date.replace(month=_currend_date.month + 1)
 
 NOTES = 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquam magni accusantium maiores praesentium, placeat possimus est tenetur quos iste deserunt nulla soluta, iusto inventore vel minima adipisci exercitationem accusamus eius?'
 
