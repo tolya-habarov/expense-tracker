@@ -4,7 +4,7 @@ from django.utils import timezone
 from app import models
 
 
-class BaseTransactionForm(forms.ModelForm):
+class EditTransactionForm(forms.ModelForm):
     class Meta:
         model = models.Transaction
         fields = '__all__'

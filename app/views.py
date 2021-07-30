@@ -3,7 +3,7 @@ from typing import Any, Dict, Optional
 from django.utils import timezone
 from django.views.generic.dates import MonthArchiveView
 from django.views.generic.base import RedirectView
-from django.views.generic.edit import FormView, UpdateView
+from django.views.generic.edit import DeletionMixin, FormView, UpdateView
 from django.db.models.query import QuerySet
 from django.http import HttpRequest, HttpResponse
 from django.urls import reverse_lazy
@@ -53,10 +53,16 @@ class AddTransactionView(LoginRequiredMixin, FormView):
         return kwargs
 
 
-class EditTransactionView(LoginRequiredMixin, UpdateView):
-    form_class = forms.BaseTransactionForm
+class EditTransactionView(LoginRequiredMixin, UpdateView, DeletionMixin):
+    form_class = forms.EditTransactionForm
     template_name = 'transactions/edit.html'
     success_url = reverse_lazy('transactions')
+
+    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+        if 'delete' in request.POST:
+            return self.delete(request, *args, **kwargs)
+
+        return super().post(request, *args, **kwargs)
 
     def get_object(self, queryset: Optional[QuerySet] = None) -> models.Transaction:
         return get_object_or_404(
