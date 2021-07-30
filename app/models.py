@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils.translation import gettext_lazy as _
 
 
 class StrMixin:
@@ -18,7 +17,7 @@ class Currency(StrMixin, models.Model):
 class Account(StrMixin, models.Model):
     """Storage of transactions. For example card or cash"""
 
-    name = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=50)
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -31,7 +30,7 @@ class Account(StrMixin, models.Model):
 class Category(StrMixin, models.Model):
     """Transaction category"""
 
-    name = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=50)
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -42,7 +41,7 @@ class Category(StrMixin, models.Model):
 class Payee(StrMixin, models.Model):
     """Payment receiver"""
 
-    name = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=50)
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,

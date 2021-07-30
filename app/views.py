@@ -1,13 +1,9 @@
-import calendar
-from pytz import UTC
-import datetime as dt
-from typing import Any, Optional
+from typing import Any, Dict, Optional
 
 from django.utils import timezone
-from django.views.generic import ListView
 from django.views.generic.dates import MonthArchiveView
 from django.views.generic.base import RedirectView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import FormView, UpdateView
 from django.db.models.query import QuerySet
 from django.http import HttpRequest, HttpResponse
 from django.urls import reverse_lazy
@@ -42,10 +38,19 @@ class TransactionsView(LoginRequiredMixin, MonthArchiveView):
         return models.Transaction.objects.filter(account__user=self.request.user)
 
 
-class AddTransactionView(LoginRequiredMixin, CreateView):
+class AddTransactionView(LoginRequiredMixin, FormView):
     form_class = forms.AddTransactionForm
     template_name = 'transactions/add.html'
     success_url = reverse_lazy('transactions')
+
+    def form_valid(self, form: forms.AddTransactionForm) -> HttpResponse:
+        form.save()
+        return super().form_valid(form)
+
+    def get_form_kwargs(self) -> Dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
 
 
 class EditTransactionView(LoginRequiredMixin, UpdateView):
