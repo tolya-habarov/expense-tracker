@@ -105,6 +105,7 @@ class Command(BaseCommand):
                     name=f'Transaction{i+1}',
                     date=date,
                     notes=NOTES,
+                    amount=Decimal('.00'),
                     account=random.choice(accounts),
                     transaction_type=random.choice(models.Transaction.Type.values),
                     category=random.choice(categories),

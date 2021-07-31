@@ -29,6 +29,19 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-12">
+            
+            <div class="row">
+              {% for account in accounts %}
+                <div class="col-lg-3 col-6">
+                  <div class="small-box bg-info">
+                    <div class="inner">
+                      <h3>{{ account.balance }} {{ account.currency.symbol }}</h3>
+                      <p>{{ account.name }}</p>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
 
             <div class="card">
               <!-- Header -->
@@ -63,6 +76,7 @@
                 </div>
               </div>
               <!-- /.card-header -->
+              <!-- Body -->
               <div class="card-body">
                 <table id="transactions" class="table table-bordered table-hover">
                   <thead>
@@ -70,6 +84,7 @@
                     <th>Name</th>
                     <th>Date</th>
                     <th>Notes</th>
+                    <th>Amount</th>
                     <th>Account</th>
                     <th>Type</th>
                     <th>Category</th>
@@ -82,6 +97,7 @@
                         <td>{{ tr.name }}</td>
                         <td>{{ tr.date }}</td>
                         <td>{{ tr.notes|truncatewords:5 }}</td>
+                        <td>{{ tr.amount }}</td>
                         <td>{{ tr.account.name }}</td>
                         <td>{{ tr.get_transaction_type_display }}</td>
                         <td>{{ tr.category.name }}</td>
@@ -94,6 +110,7 @@
                     <th>Name</th>
                     <th>Date</th>
                     <th>Notes</th>
+                    <th>Amount</th>
                     <th>Account</th>
                     <th>Type</th>
                     <th>Category</th>

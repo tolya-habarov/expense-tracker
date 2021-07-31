@@ -1,4 +1,5 @@
 from django.db import models
+from django.db import transaction
 from django.contrib.auth.models import User
 
 
@@ -12,19 +13,6 @@ class Currency(StrMixin, models.Model):
 
     name = models.CharField(max_length=50, unique=True)
     symbol = models.CharField(max_length=10)
-
-
-class Account(StrMixin, models.Model):
-    """Storage of transactions. For example card or cash"""
-
-    name = models.CharField(max_length=50)
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='accounts',
-    )
-    currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
-    balance = models.DecimalField(max_digits=10, decimal_places=2)
 
 
 class Category(StrMixin, models.Model):
@@ -60,8 +48,9 @@ class Transaction(StrMixin, models.Model):
     name = models.CharField(max_length=100, db_index=True)
     date = models.DateField()
     notes = models.TextField(blank=True)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
     account = models.ForeignKey(
-        Account,
+        'Account',
         on_delete=models.CASCADE,
         related_name='transactions',
     )
@@ -79,3 +68,16 @@ class Transaction(StrMixin, models.Model):
         on_delete=models.CASCADE,
         related_name='transactions',
     )
+
+
+class Account(StrMixin, models.Model):
+    """Storage of transactions. For example card or cash"""
+
+    name = models.CharField(max_length=50)
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='accounts',
+    )
+    currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
+    balance = models.DecimalField(max_digits=10, decimal_places=2)

@@ -1,7 +1,10 @@
+from decimal import Decimal
+
 from django import forms
 from django.utils import timezone
 
 from app import models
+from app import services
 
 
 class EditTransactionForm(forms.ModelForm):
@@ -18,7 +21,16 @@ class AddTransactionForm(forms.Form):
         initial=timezone.now(),
         widget=forms.DateInput(attrs={'type': 'date'}),
     )
-    notes = forms.CharField(widget=forms.Textarea())
+    amount = forms.DecimalField(
+        min_value=Decimal('.00'),
+        initial=Decimal('.00'),
+        max_digits=10,
+        decimal_places=2,
+    )
+    notes = forms.CharField(
+        widget=forms.Textarea(),
+        required=False,
+    )
     account = forms.ModelChoiceField(queryset=None)
     transaction_type = forms.ChoiceField(
         choices=models.Transaction.Type.choices,
@@ -42,6 +54,8 @@ class AddTransactionForm(forms.Form):
                 )
             )
 
+        self.cleaned_data['transaction_type'] = int(self.cleaned_data['transaction_type'])
+        
         category, _ = models.Category.objects.get_or_create(
             user=self.user,
             name=self.cleaned_data['category'],
@@ -54,4 +68,6 @@ class AddTransactionForm(forms.Form):
         )
         self.cleaned_data['payee'] = payee
 
-        return models.Transaction.objects.create(**self.cleaned_data)
+        transaction = models.Transaction(**self.cleaned_data)
+        services.add_transaction(transaction)
+        return transaction

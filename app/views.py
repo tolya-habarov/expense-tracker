@@ -13,6 +13,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from app import models
 from app import forms
+from app import services
 
 
 @login_required
@@ -37,6 +38,11 @@ class TransactionsView(LoginRequiredMixin, MonthArchiveView):
     def get_queryset(self) -> QuerySet[models.Transaction]:
         return models.Transaction.objects.filter(account__user=self.request.user)
 
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['accounts'] = self.request.user.accounts.all()
+        return context
+
 
 class AddTransactionView(LoginRequiredMixin, FormView):
     form_class = forms.AddTransactionForm
@@ -60,9 +66,12 @@ class EditTransactionView(LoginRequiredMixin, UpdateView, DeletionMixin):
 
     def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
         if 'delete' in request.POST:
-            return self.delete(request, *args, **kwargs)
-
-        return super().post(request, *args, **kwargs)
+            request = self.delete(request, *args, **kwargs)
+        else:
+            request =  super().post(request, *args, **kwargs)
+        
+        services.update_balance(self.object.account)
+        return request
 
     def get_object(self, queryset: Optional[QuerySet] = None) -> models.Transaction:
         return get_object_or_404(
