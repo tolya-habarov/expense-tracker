@@ -7,18 +7,12 @@ from django.views.generic.edit import CreateView, DeletionMixin, FormView, Updat
 from django.db.models.query import QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
-from django.shortcuts import get_object_or_404, render
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from app import models
 from app import forms
 from app import services
-
-
-@login_required
-def index(request: HttpRequest) -> HttpResponse:
-    return render(request, 'page-blank.html')
 
 
 class CurrentDateTransactionsView(LoginRequiredMixin, RedirectView):
@@ -33,7 +27,7 @@ class TransactionsView(LoginRequiredMixin, MonthArchiveView):
     template_name = 'transactions/view.html'
     context_object_name = 'transactions'
     date_field = 'date'
-    month_format= '%m'
+    month_format = '%m'
     allow_empty = True
 
     def get_queryset(self) -> QuerySet[models.Transaction]:
@@ -69,8 +63,8 @@ class EditTransactionView(LoginRequiredMixin, UpdateView, DeletionMixin):
         if 'delete' in request.POST:
             request = self.delete(request, *args, **kwargs)
         else:
-            request =  super().post(request, *args, **kwargs)
-        
+            request = super().post(request, *args, **kwargs)
+
         services.update_balance(self.object.account)
         return request
 
@@ -92,6 +86,7 @@ class AddAccountView(LoginRequiredMixin, CreateView):
         self.object.user = self.request.user
         self.object.save()
         return HttpResponseRedirect(self.get_success_url())
+
 
 class EditAccountView(LoginRequiredMixin, UpdateView, DeletionMixin):
     form_class = forms.EditAccountForm

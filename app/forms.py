@@ -7,17 +7,6 @@ from app import models
 from app import services
 
 
-class EditTransactionForm(forms.ModelForm):
-    class Meta:
-        model = models.Transaction
-        fields = '__all__'
-        labels = {'transaction_type': 'Type'}
-        widgets = {
-            'date': forms.DateInput(attrs={'type': 'date'}),
-            'amount': forms.NumberInput(attrs={'min': '0'}),
-        }
-
-
 class AddTransactionForm(forms.Form):
     name = forms.CharField(max_length=100)
     date = forms.DateField(
@@ -74,6 +63,17 @@ class AddTransactionForm(forms.Form):
         transaction = models.Transaction(**self.cleaned_data)
         services.add_transaction(transaction)
         return transaction
+
+
+class EditTransactionForm(forms.ModelForm):
+    class Meta:
+        model = models.Transaction
+        fields = '__all__'
+        labels = {'transaction_type': 'Type'}
+        widgets = {
+            'date': forms.DateInput(attrs={'type': 'date'}),
+            'amount': forms.NumberInput(attrs={'min': '0'}),
+        }
 
 
 class AddAccountForm(forms.ModelForm):
