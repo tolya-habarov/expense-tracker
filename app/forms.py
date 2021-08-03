@@ -12,7 +12,10 @@ class EditTransactionForm(forms.ModelForm):
         model = models.Transaction
         fields = '__all__'
         labels = {'transaction_type': 'Type'}
-        widgets = {'date': forms.DateInput(attrs={'type': 'date'})}
+        widgets = {
+            'date': forms.DateInput(attrs={'type': 'date'}),
+            'amount': forms.NumberInput(attrs={'min': '0'}),
+        }
 
 
 class AddTransactionForm(forms.Form):
@@ -86,9 +89,10 @@ class AddAccountForm(forms.ModelForm):
         model = models.Account
         fields = '__all__'
         exclude = ['user']
-        widgets = {'balance': forms.NumberInput()}
+        widgets = {'balance': forms.NumberInput(attrs={'min': '0'})}
         initial = {'balance': Decimal('.00')}
+
 
 class EditAccountForm(forms.ModelForm):
     class Meta(AddAccountForm.Meta):
-        initial = {} # type: ignore
+        initial = {}  # type: ignore
