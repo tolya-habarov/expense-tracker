@@ -3,9 +3,9 @@ from typing import Any, Dict, Optional
 from django.utils import timezone
 from django.views.generic.dates import MonthArchiveView
 from django.views.generic.base import RedirectView
-from django.views.generic.edit import DeletionMixin, FormView, UpdateView
+from django.views.generic.edit import CreateView, DeletionMixin, FormView, UpdateView
 from django.db.models.query import QuerySet
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.decorators import login_required
@@ -78,5 +78,33 @@ class EditTransactionView(LoginRequiredMixin, UpdateView, DeletionMixin):
         return get_object_or_404(
             models.Transaction,
             account__user=self.request.user,
+            pk=self.kwargs['pk'],
+        )
+
+
+class AddAccountView(LoginRequiredMixin, CreateView):
+    form_class = forms.AddAccountForm
+    template_name = 'accounts/add.html'
+    success_url = reverse_lazy('transactions')
+
+    def form_valid(self, form: forms.AddAccountForm) -> HttpResponse:
+        self.object = form.save(False)
+        self.object.user = self.request.user
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+class EditAccountView(LoginRequiredMixin, UpdateView, DeletionMixin):
+    form_class = forms.EditAccountForm
+    template_name = 'accounts/edit.html'
+    success_url = reverse_lazy('transactions')
+
+    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+        if 'delete' in request.POST:
+            return self.delete(request, *args, **kwargs)
+        return super().post(request, *args, **kwargs)
+
+    def get_object(self, queryset: Optional[QuerySet] = None) -> models.Account:
+        return get_object_or_404(
+            self.request.user.accounts,
             pk=self.kwargs['pk'],
         )

@@ -55,7 +55,7 @@ class AddTransactionForm(forms.Form):
             )
 
         self.cleaned_data['transaction_type'] = int(self.cleaned_data['transaction_type'])
-        
+
         category, _ = models.Category.objects.get_or_create(
             user=self.user,
             name=self.cleaned_data['category'],
@@ -71,3 +71,24 @@ class AddTransactionForm(forms.Form):
         transaction = models.Transaction(**self.cleaned_data)
         services.add_transaction(transaction)
         return transaction
+
+
+class AddAccountForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):  # type: ignore
+        if hasattr(self.Meta, 'initial'):
+            initial = kwargs.get('initial', {})
+            initial.update(self.Meta.initial)
+            kwargs['initial'] = initial
+
+        super().__init__(*args, **kwargs)
+
+    class Meta:
+        model = models.Account
+        fields = '__all__'
+        exclude = ['user']
+        widgets = {'balance': forms.NumberInput()}
+        initial = {'balance': Decimal('.00')}
+
+class EditAccountForm(forms.ModelForm):
+    class Meta(AddAccountForm.Meta):
+        initial = {} # type: ignore

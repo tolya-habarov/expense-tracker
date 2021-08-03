@@ -30,18 +30,36 @@
         <div class="row">
           <div class="col-12">
             
+            <!-- Accounts -->
             <div class="row">
               {% for account in accounts %}
                 <div class="col-lg-3 col-6">
-                  <div class="small-box bg-info">
-                    <div class="inner">
-                      <h3>{{ account.balance }} {{ account.currency.symbol }}</h3>
-                      <p>{{ account.name }}</p>
+                  <a href="{% url 'edit_account' account.pk %}">
+                    <div class="small-box bg-lightblue">
+                      <div class="inner">
+                        <h3>{{ account.balance }} {{ account.currency.symbol }}</h3>
+                        <p>{{ account.name }}</p>
+                      </div>
                     </div>
-                  </div>
+                  </a>
                 </div>
               {% endfor %}
+
+              <div class="col-lg-3 col-6">
+                  <a href="{% url 'add_account' %}">
+                    <div class="small-box bg-primary">
+                      <div class="inner">
+                        <h3>Add</h3>
+                        <p>New Account</p>
+                      </div>
+                      <div class="icon">
+                        <i class="fas fa-plus-circle"></i>
+                      </div>
+                    </div>
+                  </a>
+                </div>
             </div>
+            <!-- /.accounts -->
 
             <div class="card">
               <!-- Header -->
