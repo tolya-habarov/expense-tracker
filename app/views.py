@@ -34,6 +34,7 @@ class TransactionsView(LoginRequiredMixin, MonthArchiveView):
     context_object_name = 'transactions'
     date_field = 'date'
     month_format= '%m'
+    allow_empty = True
 
     def get_queryset(self) -> QuerySet[models.Transaction]:
         return models.Transaction.objects.filter(account__user=self.request.user)
