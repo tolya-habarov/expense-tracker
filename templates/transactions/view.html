@@ -37,7 +37,7 @@
                   <a href="{% url 'edit_account' account.pk %}">
                     <div class="small-box bg-lightblue">
                       <div class="inner">
-                        <h3>{{ account.balance }} {{ account.currency.symbol }}</h3>
+                        <h3>{{ account.current_balance }} {{ account.currency.symbol }}</h3>
                         <p>{{ account.name }}</p>
                       </div>
                     </div>

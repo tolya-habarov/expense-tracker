@@ -8,9 +8,9 @@ from app.models import Transaction, Account
 def add_transaction(transaction: Transaction) -> None:
     account = transaction.account
     if transaction.transaction_type == Transaction.Type.EXPENSE:
-        account.balance -= transaction.amount
+        account.current_balance -= transaction.amount
     elif transaction.transaction_type == Transaction.Type.INCOME:
-        account.balance += transaction.amount
+        account.current_balance += transaction.amount
 
     transaction.save()
     account.save()
@@ -27,9 +27,9 @@ def update_balance(account: Account) -> None:
     agg = lambda x: x.aggregate(models.Sum('amount')).get('amount__sum')
 
     if income:
-        account.balance += agg(income)
+        account.current_balance += agg(income)
     
     if expence:
-        account.balance -= agg(expence)
+        account.current_balance -= agg(expence)
     
     account.save()

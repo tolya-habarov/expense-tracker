@@ -73,14 +73,15 @@ class Command(BaseCommand):
         models.Currency.objects.bulk_create(currencies)
         self.stdout.write('Create currencies ' + self.style.SUCCESS('Ok'))
 
-        new_account = lambda id, name: models.Account(
+        new_account = lambda id, name, balance: models.Account(
             id=id,
             name=name,
             user=user,
             currency=random.choice(currencies),
-            balance=Decimal(random.randrange(10) * 10000),
+            initial_balance=Decimal(balance),
+            current_balance=Decimal(balance),
         )
-        accounts = [new_account(id, name) for id, name in enumerate(ACCOUNTS)]
+        accounts = [new_account(id, name, random.randrange(10) * 10000) for id, name in enumerate(ACCOUNTS)]
         models.Account.objects.bulk_create(accounts)
         self.stdout.write('Create accounts ' + self.style.SUCCESS('Ok'))
 
