@@ -7,11 +7,22 @@ from app import models
 from app import services
 
 
+def validate_date(date):
+    if date > timezone.now().date():
+        raise forms.ValidationError(
+            'The date cannot be in the future!',
+            params={'date': date},
+        )
+
+    return date
+
+
 class AddTransactionForm(forms.Form):
     name = forms.CharField(max_length=100)
     date = forms.DateField(
         initial=timezone.now(),
         widget=forms.DateInput(attrs={'type': 'date'}),
+        validators=[validate_date],
     )
     amount = forms.DecimalField(
         min_value=Decimal('.00'),
@@ -66,12 +77,17 @@ class AddTransactionForm(forms.Form):
 
 
 class EditTransactionForm(forms.ModelForm):
+    date = forms.DateField(
+        initial=timezone.now(),
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        validators=[validate_date],
+    )
+
     class Meta:
         model = models.Transaction
         fields = '__all__'
         labels = {'transaction_type': 'Type'}
         widgets = {
-            'date': forms.DateInput(attrs={'type': 'date'}),
             'amount': forms.NumberInput(attrs={'min': '0'}),
         }
 
