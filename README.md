@@ -14,7 +14,7 @@
 
 **Запуск**:
 
-    git clone https://github.com/tolya-maximum/expense-tracker.git
+    git clone https://github.com/tolya-habarov/expense-tracker.git
     cd expense-tracker
     python3 -m venv .venv
     source .venv/bin/activate
