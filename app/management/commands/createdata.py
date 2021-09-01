@@ -63,7 +63,7 @@ class Command(BaseCommand):
             self.stdout.write('Test user found ' + self.style.SUCCESS('Ok'))
         except User.DoesNotExist:
             user = User(username='test_user', email='test_user@mail.com')
-            user.set_password('1234test')
+            user.set_password('test')
             user.save()
             self.stdout.write('Test user created ' + self.style.SUCCESS('Ok'))
 
