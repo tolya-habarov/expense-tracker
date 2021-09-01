@@ -84,6 +84,7 @@ class AddAccountView(LoginRequiredMixin, CreateView):
     def form_valid(self, form: forms.AddAccountForm) -> HttpResponse:
         self.object = form.save(False)
         self.object.user = self.request.user
+        self.object.current_balance = self.object.initial_balance
         self.object.save()
         return HttpResponseRedirect(self.get_success_url())
 
